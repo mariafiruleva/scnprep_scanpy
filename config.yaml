@@ -1,0 +1,18 @@
+## get data
+
+link: 'http://cf.10xgenomics.com/samples/cell-exp/1.1.0/pbmc3k/pbmc3k_filtered_gene_bc_matrices.tar.gz'
+tar_out: 'data/pbmc3k_filtered_gene_bc_matrices.tar.gz'
+cr_out: 'data/'
+
+## scanpy parameters
+
+data: 'data/filtered_gene_bc_matrices/hg19/'
+h5ad_path: 'output/pbmc3k.h5ad'
+resolutions: ['0.2', '0.4', '0.6', '0.8', '1.0']
+
+## conversion
+
+token: 'scanpy_pbmc_aeDaix9i'
+name: 'scanpy_pbmc_aeDaix9i'
+out_dir: 'output/scanpy_pbmc_aeDaix9i'
+specie: 'hs'
