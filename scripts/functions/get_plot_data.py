@@ -6,7 +6,6 @@ from anndata import AnnData
 
 def get_plot_data(adata: AnnData, outfile: str, max_reduction_dims=5, n_levels=50):
     plot_data = {'fields': {}, 'data': {}, 'annotations': {}}
-    adata.obs.columns = adata.obs.columns.str.replace("\\.", "_")
     for idx, r in enumerate(adata.obsm):
         if idx:
             new_df = pd.DataFrame(adata.obsm[r]).iloc[:, :min(len(adata.obsm[r][0]), max_reduction_dims + 1)]
@@ -23,9 +22,7 @@ def get_plot_data(adata: AnnData, outfile: str, max_reduction_dims=5, n_levels=5
     categorical_data = info.select_dtypes(include='category')
     for k in info.columns:
         if k in df.columns:
-            print(k)
             plot_data['fields'][k] = {"type": "numeric", "range": [min(info[k]), max(info[k])]}
-            print(plot_data['fields'][k])
         else:
             if k in categorical_data.columns:
                 if len(list(adata.obs[k].dtype.categories)) < n_levels:

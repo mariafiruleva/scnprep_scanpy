@@ -12,7 +12,7 @@ from functions.get_plot_data import get_plot_data
 def conversion(adata_path: str, out_dir: str,
                     token: str, name: str, specie: str,
                     link='', description='',
-                    public=False, curated=False, max_reduction_dims=5, n_levels=50):
+                    public=False, curated=False, max_reduction_dims=5, n_levels=50, use_raw=True):
     species = ['mm', 'hs', 'rn']
     if not specie in species:
         raise ValueError(
@@ -20,6 +20,10 @@ def conversion(adata_path: str, out_dir: str,
     if not os.path.exists(out_dir):
         os.mkdir(out_dir)
     adata = sc.read_h5ad(adata_path)
+    if use_raw:
+        adata = adata.raw.to_adata()
+    adata.obs.columns = adata.obs.columns.str.replace("\\.", "_")
+    adata.obs.index = adata.obs.index.astype(str) + '_' + adata.obs['dataset'].astype(str)
     get_description(adata=adata, specie=specie,
                     outfile=f'{out_dir}/dataset.json', token=token, name=name,
                     link=link, description=description, public=public, curated=curated)

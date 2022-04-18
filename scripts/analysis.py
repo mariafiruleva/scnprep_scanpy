@@ -1,13 +1,17 @@
 import argparse
+import re
+from pathlib import Path
 
 import numpy as np
 import scanpy as sc
 from anndata import AnnData
 
 
-def get_data(path: str):
+def get_data(path: str, sample: str):
+    path = [re.sub('/matrix.*', '', str(x)) for x in list(Path(path).rglob('*')) if re.findall('matrix', str(x))][0]
     adata = sc.read_10x_mtx(path, var_names='gene_symbols', cache=True)
     adata.var_names_make_unique()
+    adata.obs['dataset'] = sample
     return adata
 
 def prepare_data(adata: AnnData):
@@ -21,7 +25,7 @@ def prepare_data(adata: AnnData):
             pass
     return adata
 
-def filter_data(adata: AnnData, min_genes: int, min_cells: int, mt_pct=5, min_counts=2500):
+def filter_data(adata: AnnData, min_genes: int, min_cells: int, mt_pct=15, min_counts=2500):
     sc.pp.filter_cells(adata, min_genes=min_genes)
     sc.pp.filter_genes(adata, min_cells=min_cells)
     adata = adata[adata.obs.n_genes_by_counts < min_counts, :]
@@ -68,6 +72,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Basic preprocessing: scanpy')
     parser.add_argument('--data', type=str, required=True,
                         help='Path to the CellRanger output')
+    parser.add_argument('--dataset', type=str, required=True,
+                        help='Dataset name for meta-data')
     parser.add_argument('--out_file', type=str, required=True,
                         help='Path to the output h5ad file')
     parser.add_argument('--res', nargs='+', default=[1.0],
@@ -76,13 +82,14 @@ if __name__ == '__main__':
     parser.add_argument('--min_cells', type=int, required=False, default=3)
     args = parser.parse_args()
     args.res = [float(x) for x in args.res]
-    print(args)
 
-    adata = get_data(args.data)
+    adata = get_data(args.data, args.dataset)
     adata = prepare_data(adata)
     adata = filter_data(adata, args.min_genes, args.min_cells)
+
     adata = prepare_for_dim_reduction(adata)
     adata = dim_reduction(adata)
+
     adata = clustering(adata, args.res)
     adata = get_markers(adata, args.res)
     save_adata(adata, args.out_file)

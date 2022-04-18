@@ -1,18 +1,18 @@
 ## get data
 
-link: 'http://cf.10xgenomics.com/samples/cell-exp/1.1.0/pbmc3k/pbmc3k_filtered_gene_bc_matrices.tar.gz'
-tar_out: 'data/pbmc3k_filtered_gene_bc_matrices.tar.gz'
-cr_out: 'data/'
-
-## scanpy parameters
-
-data: 'data/filtered_gene_bc_matrices/hg19/'
-h5ad_path: 'output/pbmc3k.h5ad'
+samples: ['scanpy_pbmc8k_Pong1coo', 'scanpy_pbmc4k_Pong1coo']
+study: 'scanpy_pbmc_8k_4k_Pong1coo'
 resolutions: ['0.2', '0.4', '0.6', '0.8', '1.0']
-
-## conversion
-
-token: 'scanpy_pbmc_aeDaix9i'
-name: 'scanpy_pbmc_aeDaix9i'
-out_dir: 'output/scanpy_pbmc_aeDaix9i'
 specie: 'hs'
+
+scanpy_pbmc8k_Pong1coo:
+  link: 'https://cf.10xgenomics.com/samples/cell-exp/2.1.0/pbmc8k/pbmc8k_filtered_gene_bc_matrices.tar.gz'
+  tar_out: 'data/scanpy_pbmc8k_Pong1coo/pbmc8k_filtered_gene_bc_matrices.tar.gz'
+  cr_out: 'data/scanpy_pbmc8k_Pong1coo'
+  out_dir: 'data/scanpy_pbmc8k_Pong1coo/filtered_gene_bc_matrix'
+
+scanpy_pbmc4k_Pong1coo:
+  link: 'https://cf.10xgenomics.com/samples/cell-exp/2.1.0/pbmc4k/pbmc4k_filtered_gene_bc_matrices.tar.gz'
+  tar_out: 'data/scanpy_pbmc4k_Pong1coo/pbmc4k_filtered_gene_bc_matrices.tar.gz'
+  cr_out: 'data/scanpy_pbmc4k_Pong1coo'
+  out_dir: 'data/scanpy_pbmc4k_Pong1coo/filtered_feature_bc_matrix'
